@@ -3,7 +3,6 @@ mojblog/schemas/__pycache__
 mojblog/models/__pycache__
 mojblog/__pycache__
 mojblog/api/__pycache__
-migrations/
 .coverage
 .provisioned
 .pytest_cache
