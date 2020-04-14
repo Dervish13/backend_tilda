@@ -60,8 +60,8 @@ def migrate(migrator, database, fake=False, **kwargs):
     @migrator.create_model
     class UserRoles(pw.Model):
         id = pw.AutoField()
-        role = pw.ForeignKeyField(backref='users', column_name='role_id', field='id', model=migrator.orm['role'])
-        user = pw.ForeignKeyField(backref='roles', column_name='user_id', field='id', model=migrator.orm['users'])
+        role = pw.ForeignKeyField(backref='userroles_set', column_name='role_id', field='id', model=migrator.orm['role'])
+        user = pw.ForeignKeyField(backref='userroles_set', column_name='user_id', field='id', model=migrator.orm['users'])
 
         class Meta:
             table_name = "userroles"

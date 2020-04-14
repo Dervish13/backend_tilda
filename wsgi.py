@@ -10,10 +10,6 @@ from name import app_name
 api = import_module(f'{app_name}.api')
 config_name = os.getenv('FLASK_ENV') or 'default'
 config = configs[config_name]
-#  schemas = {
-#      'user': f'{app_name}.schemas.user',
-#  }
-#  app = create_app(config, schemas=schemas)
 app = create_app(config)
 api.create_api(app)
 hostname = socket.gethostname()

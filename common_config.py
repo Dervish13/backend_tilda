@@ -26,9 +26,10 @@ class Config:
     OPENAPI_REDOC_PATH = '/redoc'
     OPENAPI_SWAGGER_UI_PATH = '/swaggerui'
     OPENAPI_SWAGGER_UI_URL = '/static/swaggerui/'
-    OPENAPI_VERSION = '2.0.0'
+    OPENAPI_VERSION = '3.0.2'
     MEDIA_URL = '/media'
     MEDIA_PATH = 'media'
+    ACCOUNT_REQUEST_EXPIRY = 24  # in hours
     PASSWORD_RESET_EXPIRY = 2  # in hours
     DATABASE = {
         'name': 'database.db',
@@ -40,6 +41,12 @@ class Config:
         #  'ssl': True,
         #  'username': 'someone@example.com',
         #  'password': 'Sekrit',
+    }
+    FROM_EMAIL = 'office@example.com'
+    SUBJECTS = {
+        'prefix': '[Freenit] ',
+        'confirm': 'Account confirmation',
+        'register': 'Account registration',
     }
 
     @staticmethod
