@@ -1,8 +1,9 @@
 from freenit.api.methodviews import MethodView
-from flask_smorest import Blueprint
+from freenit.schemas.paging import PageInSchema, paginate
+from flask_smorest import Blueprint, abort
 from flask_jwt_extended import get_jwt_identity, jwt_optional, jwt_required
 
-from ..schemas.blog import BlogSchema
+from ..schemas.blog import BlogSchema, BlogPageOutSchema
 from ..models.blog import Blog
 from ..models.user import User
 
@@ -24,4 +25,47 @@ class BlogListAPI(MethodView):
             abort(404, message='User not found')
         blog.author = user
         blog.save()
+        return blog
+
+    @blueprint.arguments(PageInSchema(), location='headers')
+    @blueprint.response(BlogPageOutSchema)
+    def get(self, pagination):
+        """List blog posts"""
+        query = Blog.select()
+        return paginate(query, pagination)
+
+
+@blueprint.route('/<blog_id>', endpoint='blog')
+class BlogApi(MethodView):
+    @blueprint.response(BlogSchema)
+    def get(self, blog_id):
+        """ Get blog details """
+        try:
+            blog = Blog.get(id = blog_id)
+        except Blog.DoesNotExist:
+            abort(404, message='Blog not found')
+        return blog
+
+    @jwt_required
+    @blueprint.arguments(BlogSchema(partial=True))
+    @blueprint.response(BlogSchema)
+    def patch(self, args, blog_id):
+        """Edit blog post"""
+        try:
+            blog = Blog.get(id=blog_id)
+        except Blog.DoesNotExist:
+            abort(404, message='Blog not found')
+        for field in args:
+            setattr(blog, field, args[field])
+        blog.save()
+        return blog
+
+    @jwt_required
+    @blueprint.response(BlogSchema)
+    def delete(self, blog_id):
+        try:
+            blog = Blog.get(id=blog_id)
+        except Blog.DoesNotExist:
+            abort(404, message='Blog not found')
+        blog.delete_instance()
         return blog
