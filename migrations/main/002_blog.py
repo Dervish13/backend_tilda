@@ -36,8 +36,8 @@ SQL = pw.SQL
 def migrate(migrator, database, fake=False, **kwargs):
     """Write your migrations here."""
 
-    migrator.change_fields('users', admin=pw.BooleanField(constraints=[SQL("DEFAULT False")]),
-        active=pw.BooleanField(constraints=[SQL("DEFAULT False")]))
+    migrator.change_fields('users', active=pw.BooleanField(constraints=[SQL("DEFAULT False")]),
+        admin=pw.BooleanField(constraints=[SQL("DEFAULT False")]))
 
     @migrator.create_model
     class BaseModel(pw.Model):
@@ -53,6 +53,8 @@ def migrate(migrator, database, fake=False, **kwargs):
         content = pw.TextField()
         date = pw.DateTimeField()
         title = pw.TextField()
+        slug = pw.TextField()
+        published = pw.BooleanField()
 
         class Meta:
             table_name = "blog"

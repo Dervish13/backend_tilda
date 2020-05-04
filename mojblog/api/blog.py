@@ -31,17 +31,17 @@ class BlogListAPI(MethodView):
     @blueprint.response(BlogPageOutSchema)
     def get(self, pagination):
         """List blog posts"""
-        query = Blog.select()
+        query = Blog.select().order_by(Blog.author)
         return paginate(query, pagination)
 
 
-@blueprint.route('/<blog_id>', endpoint='blog')
+@blueprint.route('/<slug>', endpoint='blog')
 class BlogApi(MethodView):
     @blueprint.response(BlogSchema)
-    def get(self, blog_id):
+    def get(self, slug):
         """ Get blog details """
         try:
-            blog = Blog.get(id = blog_id)
+            blog = Blog.get(slug = slug)
         except Blog.DoesNotExist:
             abort(404, message='Blog not found')
         return blog
@@ -49,10 +49,10 @@ class BlogApi(MethodView):
     @jwt_required
     @blueprint.arguments(BlogSchema(partial=True))
     @blueprint.response(BlogSchema)
-    def patch(self, args, blog_id):
+    def patch(self, args, slug):
         """Edit blog post"""
         try:
-            blog = Blog.get(id=blog_id)
+            blog = Blog.get(slug = slug)
         except Blog.DoesNotExist:
             abort(404, message='Blog not found')
         for field in args:
@@ -62,10 +62,23 @@ class BlogApi(MethodView):
 
     @jwt_required
     @blueprint.response(BlogSchema)
-    def delete(self, blog_id):
+    def delete(self, slug):
         try:
-            blog = Blog.get(id=blog_id)
+            blog = Blog.get(slug = slug)
         except Blog.DoesNotExist:
             abort(404, message='Blog not found')
         blog.delete_instance()
         return blog
+
+@blueprint.route('/search/<user_id>', endpoint='blog')
+class BlogSearchAPI(MethodView):
+    @blueprint.arguments(PageInSchema(), location='headers')
+    @blueprint.response(BlogPageOutSchema)
+    def get(self, pagination, user_id):
+        """List blogs by user"""
+        try:
+            user = User.get(id=user_id)
+        except User.DoesNotExist:
+            abort(404, message='User not found')
+        query = Blog.select().where(Blog.author == user)
+        return paginate(query, pagination)
