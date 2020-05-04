@@ -31,7 +31,7 @@ class BlogListAPI(MethodView):
     @blueprint.response(BlogPageOutSchema)
     def get(self, pagination):
         """List blog posts"""
-        query = Blog.select().order_by(Blog.author)
+        query = Blog.select().where(Blog.published).order_by(Blog.author)
         return paginate(query, pagination)
 
 
