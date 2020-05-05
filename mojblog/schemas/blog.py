@@ -15,5 +15,7 @@ class BlogSchema(BaseSchema):
         description='Time when blog was created',
         dump_only=True,
     )
+    published = fields.Boolean(description='Published', default=False)
+    slug = fields.String(description='Slug', dump_only=True)
 
 PageOutSchema(BlogSchema, sys.modules[__name__])
