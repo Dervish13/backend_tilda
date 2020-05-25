@@ -17,5 +17,6 @@ class BlogSchema(BaseSchema):
     )
     published = fields.Boolean(description='Published', default=False)
     slug = fields.String(description='Slug', dump_only=True)
+    image = fields.Url(description='Image Url')
 
 PageOutSchema(BlogSchema, sys.modules[__name__])
