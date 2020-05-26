@@ -15,6 +15,7 @@ class Blog(Model):
     title = TextField()
     slug = TextField()
     published = BooleanField()
+    image = TextField()
 
     def save(self, *args, **kwargs):
         if self.slug is None:
