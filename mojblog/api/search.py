@@ -14,11 +14,15 @@ blueprint = Blueprint('search', 'search')
 
 @blueprint.route('', endpoint='search')
 class SearchApi(MethodView):
-    @blueprint.arguments(SearchSchema(), location='headers')
+    @blueprint.arguments(PageInSchema(), location='headers')
+    @blueprint.arguments(SearchSchema(partial=True))
     @blueprint.response(BlogPageOutSchema)
-    def get(self, headers):
+    def post(self, pagination, args):
         """Search blog by title"""
-        searchParam = headers.get('Search','')
-        query = Blog.select().where(Blog.published,
-                                    Blog.title.contains(searchParam)).order_by(Blog.author)
-        return paginate(query, headers)
+        blogTitle = args.get('title','')
+        blogAuthor = args.get('author','')
+        blogContent = args.get('content','')
+        query = Blog.select().where(Blog.author.contains(blogAuthor) &
+                                    Blog.title.contains(blogTitle) &
+                                    Blog.content.contains(blogContent)).order_by(Blog.author)
+        return paginate(query, pagination)
