@@ -18,11 +18,12 @@ class SearchApi(MethodView):
     @blueprint.arguments(SearchSchema(partial=True))
     @blueprint.response(BlogPageOutSchema)
     def post(self, pagination, args):
-        """Search blog by title"""
+        """Search blog by parameters"""
         blogTitle = args.get('title','')
         blogAuthor = args.get('author','')
         blogContent = args.get('content','')
-        query = Blog.select().where(Blog.author.contains(blogAuthor) &
+        query = Blog.select().where(Blog.published &
+                                    Blog.author.contains(blogAuthor) &
                                     Blog.title.contains(blogTitle) &
                                     Blog.content.contains(blogContent)).order_by(Blog.author)
         return paginate(query, pagination)
