@@ -1,8 +1,4 @@
-__pycache__
-mojblog/schemas/__pycache__
-mojblog/models/__pycache__
-mojblog/__pycache__
-mojblog/api/__pycache__
+*.pyc
 .coverage
 .provisioned
 .pytest_cache
