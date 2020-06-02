@@ -25,5 +25,5 @@ class SearchApi(MethodView):
         query = Blog.select().where(Blog.published &
                                     Blog.author.contains(blogAuthor) &
                                     Blog.title.contains(blogTitle) &
-                                    Blog.content.contains(blogContent)).order_by(Blog.author)
+                                    Blog.content.contains(blogContent))
         return paginate(query, pagination)
